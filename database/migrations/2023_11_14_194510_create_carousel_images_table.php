@@ -14,7 +14,8 @@ return new class extends Migration
     {
         Schema::create('carousel_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Villa::class);
+            // $table->foreignIdFor(Villa::class);
+            $table->foreignId('villa_id')->constrained('villas')->onDelete('cascade');
             $table->string('name');
             $table->string('img_path');
             $table->timestamps();
