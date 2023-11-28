@@ -19,6 +19,8 @@ Route::get('/villas', [VillaController::class, 'index']);
 Route::post('/create-villa', [VillaController::class, 'store']);
 Route::get('/villa/{slug}', [VillaController::class, 'getVillaBySlug']);
 Route::post('/villa/{slug}', [VillaController::class, 'update']);
+Route::get('/featured_villas', [VillaController::class, 'getFeaturedVillas']);
+Route::delete('/villa/{slug}', [VillaController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

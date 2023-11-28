@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('villas', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->unique();
             $table->string('slug');
+            $table->string('featured')->default(false);
+            $table->string('address');
             $table->longText('description');
             $table->integer('price');
             $table->integer('beds');

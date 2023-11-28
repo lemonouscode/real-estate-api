@@ -31,12 +31,10 @@ class VillaController extends Controller
     {
         //
 
-        // dd($req->file('featured_image'));
-
-
         $data = $req->validate([
             'title'=>'required|string',
             'price'=>'required|integer',
+            'address'=> 'required|string',
             'description'=> 'required|string',
             'beds'=> 'required|integer',
             'baths'=> 'required|integer',
@@ -73,6 +71,8 @@ class VillaController extends Controller
             $new_villa = Villa::create([
                 'title' => $req->title,
                 'slug' => $slug,
+                'featured' => $req->featured,
+                'address' => $req->address,
                 'price' => $req->price,
                 'description' => $req->description,
                 'beds'=> $req->beds,
@@ -83,7 +83,9 @@ class VillaController extends Controller
 
             // Saving carousel Images
             foreach($carouselImages as $carouselImage){
-                $imageName = $data['title'].'-image-'.time().rand(1,1000).'.'.$carouselImage->extension();
+
+                
+                $imageName = str_replace(" ","-",$data['title']).'-image-'.time().rand(1,1000).'.'.$carouselImage->extension();
                 $carouselImage->move(public_path('villa_images'),$imageName);
 
                 $imagePath = 'villa_images/' . $imageName;
@@ -99,10 +101,11 @@ class VillaController extends Controller
 
             //Saving gallery Images
             foreach($galleryImages as $galleryImage){
-                $imageName = $data['title'].'-image-'.time().rand(1,1000).'.'.$galleryImage->extension();
+
+                $imageName = str_replace(" ","-",$data['title']).'-image-'.time().rand(1,1000).'.'.$galleryImage->extension();
                 $galleryImage->move(public_path('villa_images'), $imageName);
 
-                $imagePath = "villa_images" . $imageName;
+                $imagePath = "villa_images/" . $imageName;
                 $fullImagePath = $baseUrl . '/' . $imagePath;
 
                 galleryImage::create([
@@ -163,15 +166,19 @@ class VillaController extends Controller
 
         File::delete($imageToDelete);
 
+        $featured_image = $featured_images[0];
+        
+
+        // return response()->json(['message' => $villa->featured_image], 404);
 
         // Saving a new image into table replacing the old one
-        $featured_image = $featured_images[0];
-
         $featuredImageName = str_replace(" ","-",$req['title']).'-image-'.time().rand(1,1000).'.'.$featured_image->extension();
         $featured_image->move(public_path('villa_images'),$featuredImageName);
 
         $featuredImagePath = 'villa_images/' . $featuredImageName;
         $fullImagePath = $baseUrl . '/' . $featuredImagePath; // Full image URL
+
+
 
         // Check if the villa exists
         if ($villa) {
@@ -179,6 +186,7 @@ class VillaController extends Controller
             $villa->title = $req->title; // Replace 'New Title' with the desired new title
             $slug = strtolower(str_replace(" ","-",$req->title));
             $villa->slug = $slug;
+            $villa->address = $req->address;
             $villa->price = $req->price;
             $villa->description = $req->description;
             $villa->beds = $req->beds;
@@ -311,12 +319,37 @@ class VillaController extends Controller
 
     }
 
+    public function getFeaturedVillas(){
+        $villa = Villa::with('carouselImages', 'galleryImages')
+            ->where('featured', 'true')
+            ->get();
+
+        return response()->json(['Featured_Villas' => $villa]);
+    }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $slug)
     {
-        //
+        // Find the villa by slug
+        $villa = Villa::where('slug', $slug)->first();
+
+        // Check if the villa exists
+        if ($villa) {
+            // Delete associated images if needed
+            // For example, if you want to delete associated images from relationships
+            $villa->carouselImages()->delete();
+            $villa->galleryImages()->delete();
+
+            // Delete the villa
+            $villa->delete();
+
+            return response()->json(['message' => 'Villa deleted successfully']);
+        }
+
+        // If the villa with the given slug does not exist
+        return response()->json(['message' => 'Villa not found'], 404);
     }
 }
