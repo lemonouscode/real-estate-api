@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\VillaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +23,8 @@ Route::get('/villa/{slug}', [VillaController::class, 'getVillaBySlug']);
 Route::post('/villa/{slug}', [VillaController::class, 'update']);
 Route::get('/featured_villas', [VillaController::class, 'getFeaturedVillas']);
 Route::delete('/villa/{slug}', [VillaController::class, 'destroy']);
+
+Route::post('/contact', [ContactController::class, 'submit']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
