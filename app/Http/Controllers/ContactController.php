@@ -9,6 +9,13 @@ use App\Models\Contact;
 
 class ContactController extends Controller
 {
+
+    public function index(){
+        $contactMessages = Contact::all();
+
+        return response()->json(['SubmitedContactForms' => $contactMessages]);
+    }
+
     //
     public function submit(Request $request)
     {

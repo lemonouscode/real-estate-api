@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\VillaController;
 use Illuminate\Http\Request;
@@ -24,7 +25,11 @@ Route::post('/villa/{slug}', [VillaController::class, 'update']);
 Route::get('/featured_villas', [VillaController::class, 'getFeaturedVillas']);
 Route::delete('/villa/{slug}', [VillaController::class, 'destroy']);
 
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
 Route::post('/contact', [ContactController::class, 'submit']);
+Route::get('/contact', [ContactController::class, 'index'])->middleware('isAdmin');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

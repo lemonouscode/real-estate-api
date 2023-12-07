@@ -190,8 +190,8 @@ class VillaController extends Controller
             $villa->price = $req->price;
             $villa->description = $req->description;
             $villa->beds = $req->beds;
-            $villa->baths = $req->beds;
-            $villa->size = $req->beds;
+            $villa->baths = $req->baths;
+            $villa->size = $req->size;
             $villa->featured_image =  $fullImagePath;
 
             $villa->save();
