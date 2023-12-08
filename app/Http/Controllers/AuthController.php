@@ -69,7 +69,8 @@ class AuthController extends Controller
             'message' => 'loged in succefully',
             'token' => $token,
             'name' => $user->name,
-            'is_admin' => $user->is_admin
+            'is_admin' => $user->is_admin,
+            'id' => $user->id
         ]);
 
     }

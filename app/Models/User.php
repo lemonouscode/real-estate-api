@@ -59,4 +59,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function SavedVillas(){
+        return $this->hasMany(SavedVilla::class);
+    }
 }

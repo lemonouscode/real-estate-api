@@ -19,4 +19,8 @@ class Villa extends Model
         return $this->hasMany(galleryImage::class);
     }
 
+    public function savedVilla() {
+        return $this->hasOne(SavedVilla::class);
+    }
+    
 }

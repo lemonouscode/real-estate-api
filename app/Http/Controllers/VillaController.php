@@ -343,6 +343,9 @@ class VillaController extends Controller
             $villa->carouselImages()->delete();
             $villa->galleryImages()->delete();
 
+            // delete associated saved villa data
+            $villa->savedVilla()->delete();
+
             // Delete the villa
             $villa->delete();
 
